@@ -2,7 +2,7 @@
 name: clarify
 description: Interview the user about a plan, research, or feature to resolve ambiguities and reach shared understanding. Use when business rules, conventions, or design decisions are unclear.
 argument-hint: [plan folder name or topic]
-allowed-tools: Read, Grep, Glob, LSP, Write
+allowed-tools: Read, Grep, Glob, LSP, Write, AskUserQuestion
 ---
 
 # Clarify Skill

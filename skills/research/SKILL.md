@@ -3,31 +3,33 @@ name: research
 description: Deep-dive research into a specific area or feature of the codebase. Use when the user wants to understand how something works, find bugs, or gather context before planning.
 argument-hint: [topic or area to research]
 context: fork
-agent: Explore
-allowed-tools: Read, Grep, Glob, Bash, Write, LSP
+allowed-tools: Read, Grep, Glob, Bash, Write, LSP, Agent
 ---
 
 # Research Skill
 
 You are a codebase researcher. Your job is to deeply investigate **$ARGUMENTS** and produce a comprehensive research document.
 
-## Research Process
+## Phase 1: Explore
 
-1. **Discover** — Find all relevant files: entities, services, controllers, routes, schemas, helpers, tests, migrations, and types related to the topic. Use Glob and Grep to cast a wide net.
+Launch up to 3 Explore agents **in parallel** (in a single message with multiple Agent tool calls) to investigate the topic from different angles. Each agent should use `subagent_type: "Explore"` with thoroughness level "very thorough".
 
-2. **Understand** — Read the key files thoroughly. **Use the LSP tool** to navigate definitions, find references, inspect types, and trace call hierarchies. Prefer LSP over raw text search for understanding code structure and relationships.
+Divide the research across agents based on the topic. Typical splits:
 
-3. **Trace flows** — Follow the complete lifecycle: from route definition, through middleware, to controller, into service logic, database queries, and back. Understand how data flows end-to-end.
+- **Agent 1 — Architecture:** Discover all relevant files (entities, services, controllers, routes, schemas, helpers, tests, migrations, types) and map how they connect. Use Glob and Grep to cast a wide net. Use LSP to navigate definitions and inspect types.
+- **Agent 2 — Flows:** Trace the complete lifecycle end-to-end: from route definition, through middleware, to controller, into service logic, database queries, and back. Use LSP to follow call hierarchies and find references.
+- **Agent 3 — Deep dive:** Investigate edge cases, error handling, validation rules, side effects (jobs, notifications, webhooks), and interactions with other features. If the research topic mentions bugs or problems, trace the actual code paths that could cause the reported behavior.
 
-4. **Go deep** — Look for edge cases, error handling, validation rules, side effects (jobs, notifications, webhooks), and interactions with other features. Don't stop at the surface.
+Adjust the number and focus of agents to match the topic — use fewer agents for narrow topics, more for broad ones. Each agent prompt should include the specific research topic and a clear description of what to investigate.
 
-5. **Identify issues** — If the research topic mentions bugs or problems, keep investigating until you've found concrete evidence. Trace the actual code paths that could cause the reported behavior.
+## Phase 2: Synthesize & Write
 
-## Output
+After all agents return their findings:
 
-Infer a short, lowercase, kebab-case folder name from the research topic (e.g. "accruals", "notifications", "task-scheduling").
-
-Write your findings to `plans/{folder}/research.md` in the current working directory. Create the directory if it doesn't exist.
+1. Read through all agent results carefully.
+2. Synthesize them into a single, cohesive research document — deduplicate, organize, and connect the findings.
+3. Infer a short, lowercase, kebab-case folder name from the research topic (e.g. "accruals", "notifications", "task-scheduling").
+4. Write the document to `plans/{folder}/research.md` in the current working directory. Create the directory if it doesn't exist.
 
 ### Document Structure
 

@@ -2,7 +2,7 @@
 name: spec
 description: Create a detailed implementation plan for a feature, bug fix, or refactor. Use after /research has been done and context is available, or when the user describes work to be planned.
 argument-hint: [what to implement or fix]
-allowed-tools: Read, Grep, Glob, Bash, LSP, Write
+allowed-tools: Read, Grep, Glob, Bash, LSP, Write, AskUserQuestion
 ---
 
 # Spec Skill
