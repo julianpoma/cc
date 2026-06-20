@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title><!-- TITLE --></title>
+
+  <!-- Tailwind Play CDN: no build step. -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            claude: {
+              cream: "#FAF8F5",
+              paper: "#F0EDE8",
+              coral: "#B8602A",
+              "coral-dark": "#9A4F20",
+              ink: "#2C2825",
+              muted: "#8A837A",
+              border: "#D4CFC7",
+            },
+          },
+          fontFamily: {
+            sans: ['ui-sans-serif', 'system-ui', '-apple-system', 'Segoe UI', 'Roboto', 'Helvetica', 'Arial', 'sans-serif'],
+            mono: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'Consolas', 'monospace'],
+          },
+        },
+      },
+    };
+  </script>
+  <style>
+    /* Anchor offset so sticky-jump targets aren't hidden under the header. */
+    :target { scroll-margin-top: 5rem; }
+  </style>
+</head>
+
+<body class="bg-claude-cream text-claude-ink font-sans antialiased">
+  <!-- ============ Header ============ -->
+  <header class="border-b border-claude-border">
+    <div class="mx-auto max-w-5xl px-6 py-10">
+      <p class="text-xs font-medium uppercase tracking-widest text-claude-coral">Explainer</p>
+      <h1 class="mt-2 text-3xl font-semibold leading-tight md:text-4xl"><!-- TITLE --></h1>
+      <p class="mt-3 max-w-2xl text-claude-muted"><!-- One-line summary of what this document covers. --></p>
+    </div>
+  </header>
+
+  <div class="mx-auto flex max-w-5xl gap-10 px-6 py-10">
+    <!-- ============ Table of contents (sticky on wide screens) ============ -->
+    <nav class="sticky top-8 hidden h-fit w-48 shrink-0 lg:block" aria-label="Contents">
+      <p class="mb-3 text-xs font-semibold uppercase tracking-wider text-claude-muted">Contents</p>
+      <ul class="space-y-2 text-sm">
+        <li><a class="text-claude-muted transition hover:text-claude-coral" href="#overview">Overview</a></li>
+        <li><a class="text-claude-muted transition hover:text-claude-coral" href="#flow">How it works</a></li>
+        <li><a class="text-claude-muted transition hover:text-claude-coral" href="#code">Key code</a></li>
+        <li><a class="text-claude-muted transition hover:text-claude-coral" href="#compare">Comparison</a></li>
+        <li><a class="text-claude-muted transition hover:text-claude-coral" href="#gotchas">Gotchas</a></li>
+      </ul>
+    </nav>
+
+    <!-- ============ Main content ============ -->
+    <main class="min-w-0 flex-1 space-y-12">
+
+      <!-- Section: prose -->
+      <section id="overview" class="space-y-4">
+        <h2 class="text-xl font-semibold">Overview</h2>
+        <p class="leading-relaxed">
+          Body text goes here. Keep a comfortable measure, generous line height, and let
+          headings carry the structure. Links use the
+          <a href="#" class="font-medium text-claude-coral underline decoration-claude-coral/30 underline-offset-2 hover:decoration-claude-coral">accent color</a>.
+        </p>
+
+        <!-- Callouts: color-code meaning (tip / gotcha) -->
+        <div class="rounded-lg border border-claude-border bg-claude-paper p-4">
+          <p class="text-sm font-semibold text-claude-coral">Tip</p>
+          <p class="mt-1 text-sm leading-relaxed">Use callouts to surface the thing that matters, not to decorate.</p>
+        </div>
+        <div class="rounded-lg border-l-4 border-amber-400 bg-amber-50 p-4">
+          <p class="text-sm font-semibold text-amber-700">Gotcha</p>
+          <p class="mt-1 text-sm leading-relaxed">Edge cases and footguns get their own visually distinct block.</p>
+        </div>
+      </section>
+
+      <!-- Section: Mermaid diagram -->
+      <section id="flow" class="space-y-4">
+        <h2 class="text-xl font-semibold">How it works</h2>
+        <figure class="overflow-x-auto rounded-lg border border-claude-border bg-claude-paper p-4">
+          <pre class="mermaid">
+flowchart LR
+    A[Request] --> B{Token available?}
+    B -- yes --> C[Serve + decrement]
+    B -- no --> D[429 Too Many Requests]
+    C --> E[Refill over time]
+    E --> B
+          </pre>
+          <figcaption class="mt-2 text-center text-xs text-claude-muted">Figure 1 — request flow</figcaption>
+        </figure>
+      </section>
+
+      <!-- Section: annotated code with copy button -->
+      <section id="code" class="space-y-4">
+        <h2 class="text-xl font-semibold">Key code</h2>
+        <div class="overflow-hidden rounded-lg border border-claude-border bg-claude-ink">
+          <div class="flex items-center justify-between border-b border-white/10 px-4 py-2">
+            <span class="font-mono text-xs text-white/60">rate_limiter.py</span>
+            <button
+              class="rounded bg-white/10 px-2 py-1 text-xs text-white/80 transition hover:bg-white/20"
+              onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre class="overflow-x-auto p-4 text-sm leading-relaxed"><code class="font-mono text-claude-cream">def allow(self, key):
+    bucket = self.buckets[key]
+    bucket.refill()              # add tokens for elapsed time
+    if bucket.tokens >= 1:
+        bucket.tokens -= 1       # spend one token
+        return True
+    return False                 # rate limited</code></pre>
+        </div>
+        <p class="text-sm text-claude-muted">Annotate the 3–4 lines that matter; don't dump whole files.</p>
+      </section>
+
+      <!-- Section: comparison table -->
+      <section id="compare" class="space-y-4">
+        <h2 class="text-xl font-semibold">Comparison</h2>
+        <div class="overflow-x-auto rounded-lg border border-claude-border">
+          <table class="w-full border-collapse text-left text-sm">
+            <thead class="bg-claude-paper">
+              <tr class="border-b border-claude-border">
+                <th class="px-4 py-3 font-semibold">Approach</th>
+                <th class="px-4 py-3 font-semibold">Burst-friendly</th>
+                <th class="px-4 py-3 font-semibold">Memory</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="border-b border-claude-border">
+                <td class="px-4 py-3 font-medium">Token bucket</td>
+                <td class="px-4 py-3">Yes</td>
+                <td class="px-4 py-3">O(keys)</td>
+              </tr>
+              <tr>
+                <td class="px-4 py-3 font-medium">Fixed window</td>
+                <td class="px-4 py-3 text-claude-muted">No</td>
+                <td class="px-4 py-3">O(keys)</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Section: interactive widget example (slider) -->
+      <section id="gotchas" class="space-y-4">
+        <h2 class="text-xl font-semibold">Gotchas</h2>
+        <div class="rounded-lg border border-claude-border bg-claude-paper p-4">
+          <label class="text-sm font-medium">Refill rate: <span id="rateOut" class="font-mono text-claude-coral">5</span> tok/s</label>
+          <input id="rate" type="range" min="1" max="20" value="5" class="mt-2 w-full accent-claude-coral"
+                 oninput="document.getElementById('rateOut').textContent = this.value" />
+          <p class="mt-2 text-sm text-claude-muted">Interactive controls let the reader explore — pair them with a copy button that exports state back to a prompt when relevant.</p>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <footer class="border-t border-claude-border">
+    <div class="mx-auto max-w-5xl px-6 py-6 text-xs text-claude-muted">
+      Generated with Claude Code · htmlfy
+    </div>
+  </footer>
+
+  <!-- ============ Scripts ============ -->
+  <script type="module">
+    import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs";
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: "base",
+      themeVariables: {
+        primaryColor: "#F0EDE8",
+        primaryBorderColor: "#B8602A",
+        primaryTextColor: "#2C2825",
+        lineColor: "#8A837A",
+        fontFamily: "ui-sans-serif, system-ui, sans-serif",
+      },
+    });
+  </script>
+  <script>
+    function copyCode(btn) {
+      const code = btn.closest("div").parentElement.querySelector("code").innerText;
+      navigator.clipboard.writeText(code).then(() => {
+        const prev = btn.textContent;
+        btn.textContent = "Copied!";
+        setTimeout(() => (btn.textContent = prev), 1200);
+      });
+    }
+  </script>
+</body>
+</html>
